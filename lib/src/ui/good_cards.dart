@@ -17,7 +17,7 @@ class GoodCards extends StatelessWidget {
             contentPadding: const EdgeInsets.all(10.0),
             leading: Icon(cardData.type.getIcon(), color: theme.colorScheme.secondary),
             title: Text(
-              cardData.label ?? 'audio',
+              cardData.title ?? 'no title',
               style: theme.textTheme.titleSmall,
             ),
             subtitle: Text(
