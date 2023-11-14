@@ -1,0 +1,5 @@
+{
+  "type": "dev",
+  "version": "1.0.0",
+  "api": "https://bff.goodinside.dev/api/p/cards"
+}
