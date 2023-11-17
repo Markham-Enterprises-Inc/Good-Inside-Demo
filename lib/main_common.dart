@@ -19,6 +19,7 @@ import 'package:flutter/material.dart'
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goodinside/src/data/blocs/good_data_cubit/good_inside_data_cubit.dart';
+import 'package:goodinside/src/data/blocs/navigation/navigation_cubit.dart';
 
 import 'src/core_app.dart';
 import 'src/data/blocs/check_internet/check_internet_cubit.dart';
@@ -39,6 +40,7 @@ Future<void> mainCommon() async {
         home: MultiBlocProvider(providers: [
           BlocProvider<CheckInternetCubit>(create: (BuildContext context) => CheckInternetCubit()),
           BlocProvider<GoodInsideDataCubit>(create: (BuildContext context) => GoodInsideDataCubit()),
+          BlocProvider<NavigationCubit>(create: (BuildContext context) => NavigationCubit())
         ], child: const CoreApp())));
   }, onError: (dynamic error, dynamic stackTrace) {
     // FirebaseCrashlytics.instance.recordError(error, stackTrace);

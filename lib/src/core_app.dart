@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goodinside/src/data/blocs/good_data_cubit/good_inside_data_cubit.dart';
+import 'package:goodinside/src/data/blocs/navigation/navigation_cubit.dart';
 import 'package:goodinside/src/data/listeners/check_internet_listener.dart';
 import 'package:goodinside/src/ui/good_cards.dart';
+import 'package:goodinside/src/ui/screens/good_card_display_screen.dart';
 
 import 'data/models/app_config.dart';
 import 'data/models/good_inside_card_data.dart';
@@ -41,21 +43,32 @@ class CoreAppContent extends StatelessWidget {
       ),
       body: MultiBlocListener(
           listeners: [checkInternetListener(context)],
-          child: Column(children: [
-            Text('Good Inside', style: Theme.of(context).textTheme.titleLarge),
-            BlocBuilder<GoodInsideDataCubit, List<GoodInsideCardData>>(
-                bloc: BlocProvider.of<GoodInsideDataCubit>(context),
-                builder: (BuildContext context, List<GoodInsideCardData> cards) => cards.isEmpty
-                    ? const Text('no data')
-                    : Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: cards.length,
-                            itemBuilder: (
-                              BuildContext context,
-                              int idx,
-                            ) =>
-                                GoodCards(cards[idx])),
-                      ))
-          ])));
+          child: BlocBuilder<NavigationCubit, NavigationCubitState>(
+              bloc: BlocProvider.of<NavigationCubit>(context),
+              builder: (context, state) {
+                debugPrint('state ${state.status} ${state.cardData} ');
+
+                return state.status == ScreenStatus.display && state.cardData != null
+                    ? GoodCardDisplayScreen(state.cardData!)
+                    : Column(children: [
+                        Text('Good Inside', style: Theme.of(context).textTheme.titleLarge),
+                        BlocBuilder<GoodInsideDataCubit, List<GoodInsideCardData>>(
+                            bloc: BlocProvider.of<GoodInsideDataCubit>(context),
+                            builder: (BuildContext context, List<GoodInsideCardData> cards) => cards.isEmpty
+                                ? const Text('no data')
+                                : Expanded(
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: cards.length,
+                                        itemBuilder: (
+                                          BuildContext context,
+                                          int idx,
+                                        ) =>
+                                            InkWell(
+                                                onTap: () =>
+                                                    BlocProvider.of<NavigationCubit>(context).updateNav(ScreenStatus.display, addCard: cards[idx]),
+                                                child: GoodCards(cards[idx]))),
+                                  ))
+                      ]);
+              })));
 }
